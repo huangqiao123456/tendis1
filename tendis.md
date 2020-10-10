@@ -80,11 +80,17 @@
 
 ​				tar  -zxvf  tendisplus-2.0.2-rocksdb-v5.13.4.tgz
 
+​				![1602298714420](C:\Users\v_vhqhuang\AppData\Roaming\Typora\typora-user-images\1602298714420.png)
+
+​			![1602298757851](C:\Users\v_vhqhuang\AppData\Roaming\Typora\typora-user-images\1602298757851.png)
+
 ​			2. 复制目录
 
 ​					 	复制一个script目录，并重新命名为script_port,port为tendis的端口号如（51003，下面均						 以51003端口为例），根据需要修改，每需要手动建立一个tendis节点就需要复制一个script						 目录
 
 ​						 cp -r ./script ./script_51003
+
+​						![1602298832675](C:\Users\v_vhqhuang\AppData\Roaming\Typora\typora-user-images\1602298832675.png)
 
 ​			3. 修改配置文件和停止脚本
 
@@ -94,15 +100,21 @@
 
 ​						 vim stop.sh		
 
-​			 4. 删除目录
+​						![1602298916508](C:\Users\v_vhqhuang\AppData\Roaming\Typora\typora-user-images\1602298916508.png)
+
+​			![1602298950422](C:\Users\v_vhqhuang\AppData\Roaming\Typora\typora-user-images\1602298950422.png) 			4. 删除目录
 
 ​						 删除script_51003下面的home目录（没有则忽略该步骤）
 
 ​						 rm -rf ./home
 
+​						![1602298999084](C:\Users\v_vhqhuang\AppData\Roaming\Typora\typora-user-images\1602298999084.png)
+
 ​			5. 启动tendis节点
 
 ​				sh ./start.sh
+
+![1602299063891](C:\Users\v_vhqhuang\AppData\Roaming\Typora\typora-user-images\1602299063891.png)
 
 ​	    **[第二种：使用tendisplus-2.0.2-rocksdb-v5.13.4.tgz包联机部署真实生产环境](#second)**
 
@@ -112,14 +124,14 @@
 
 ​				Linux 操作系统开放外网访问，用于联机tendis集群
 
-| 实例            | 个数 | IP       | 配置                   |
-| --------------- | ---- | -------- | ---------------------- |
-| tendis集群机器A | 1    | 10.0.1.1 | 避免端口和目录冲突     |
-| tendis集群机器B | 1    | 10.0.1.2 | 默认端口  全局目录配置 |
+| 实例            | 个数 | IP             | 配置                   |
+| --------------- | ---- | -------------- | ---------------------- |
+| tendis集群机器A | 1    | 106.52.236.229 | 避免端口和目录冲突     |
+| tendis集群机器B | 1    | 106.52.242.48  | 默认端口  全局目录配置 |
 
 **实施部署**
 
-​			1. 登陆tendis集群机器A  10.0.1.1 
+​			1. 登陆tendis集群机器A  106.52.236.229
 
 ​			2. 下载tendisplus-2.0.2-rocksdb-v5.13.4.tgz包并解压，进入该目录
 
@@ -127,47 +139,57 @@
 
 ​			3. 复制目录
 
-​					 	复制一个script目录，并重新命名为script_port,port为tendis的端口号如（51003，下面均						 以51003端口为例），根据需要修改，每需要手动建立一个tendis节点就需要复制一个script						 目录
+​					 	复制一个script目录，并重新命名为script_port,port为tendis的端口号如（51009，下面均						 以51009端口为例），根据需要修改，每需要手动建立一个tendis节点就需要复制一个script						 目录
 
-​						 cp -r ./script ./script_51003
+​						 cp -r ./script ./script_51009
 
 ​			4. 修改配置文件和停止脚本
 
-​					 	进入script_51003目录，修改tendisplus.conf文件和修改stop.sh文件，将port后面的值改 					 	成51003
+​					 	进入script_51009目录，修改tendisplus.conf文件和修改stop.sh文件，将port后面的值改 					 	成51009
 
 ​						 vim tendisplus.conf
 
-​						 vim stop.sh		
+​						 vim stop.sh		![1602312717406](C:\Users\v_vhqhuang\AppData\Roaming\Typora\typora-user-images\1602312717406.png)
 
 ​			 5. 删除目录
 
-​						 删除script_51003下面的home目录（没有则忽略该步骤）
+​						 删除script_51009下面的home目录（没有则忽略该步骤）
 
 ​						 rm -rf ./home
 
-​			6. 启动tendis节点
-
-​				sh ./start.sh
-
-​			7. 登陆集群机器B 10.0.1.2，重复上述所有步骤
-
-​			8. 开启集群模式
+​			6. 开启集群模式
 
 ​						将两个节点中的tendisplus.conf文件的末尾加上cluster-enabled on
 
+​					![1602312657605](C:\Users\v_vhqhuang\AppData\Roaming\Typora\typora-user-images\1602312657605.png)
+
+​			7. 修改tendispluas.conf配置文件，使tendis节点能外网访问
+
+​				加上bind 0.0.0.0，默认是本地访问，加上后可外网访问![1602312896112](C:\Users\v_vhqhuang\AppData\Roaming\Typora\typora-user-images\1602312896112.png)
+
+​			7. 启动tendis节点
+
+​				sh ./start.sh
+
+​			8. 登陆集群机器B 106.52.242.48，重复上述所有步骤(新的节点为： 106.52.242.48:51005)
+
 ​			9. 加入集群
 
-​						使用redis-cli工具连接51003节点
+​						使用redis-cli工具连接106.52.236.229:51009节点
 
-​						../bin/redis-cli -h 10.0.1.1 -p 51003
+​						 ../bin/redis-cli -h 106.52.236.229 -p 51009![1602313033356](C:\Users\v_vhqhuang\AppData\Roaming\Typora\typora-user-images\1602313033356.png)
 
-​						然后执行  cluster meet  10.0.1.2 51003
+​						然后执行  cluster meet 106.52.242.48 51005
 
-​						执行cluster nodes查看节点信息，看是否添加进了集群
+![1602313321656](C:\Users\v_vhqhuang\AppData\Roaming\Typora\typora-user-images\1602313321656.png)
+
+​						执行cluster nodes查看节点信息，看是否添加进了集群![1602313545400](C:\Users\v_vhqhuang\AppData\Roaming\Typora\typora-user-images\1602313545400.png)
 
 ​		  10. 支持手动添加slot
 
 ​						连接上tendis节点，执行 cluster addslots 1  ，槽位号不能重复添加
+
+​						![1602313604560](C:\Users\v_vhqhuang\AppData\Roaming\Typora\typora-user-images\1602313604560.png)
 
 ​						**常见问题小贴士（ERR:18,msg:Slot is already busy）**
 
